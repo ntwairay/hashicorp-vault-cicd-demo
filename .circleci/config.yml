@@ -20,15 +20,10 @@ jobs:
           path: /home/circleci/app
       # Download and cache dependencies
       - run:
-          name: install aws cli and run npm install
+          name: run npm install
           command: |
              cd app
              npm install
-             curl -O https://bootstrap.pypa.io/get-pip.py
-             sudo python get-pip.py
-             sudo apt-get update; sudo apt-get install python-dev -y
-             sudo pip install awscli
-
 
       - persist_to_workspace:
           # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is
@@ -48,6 +43,11 @@ jobs:
          name: Build and push docker image to AWS ECR
          command: |
            cd /home/circleci/app
+
+           curl -O https://bootstrap.pypa.io/get-pip.py
+           sudo python get-pip.py
+           sudo apt-get update; sudo apt-get install python-dev -y
+           sudo pip install awscli
 
            CRED_JSON=$(curl --header "X-Vault-Token: $TOKEN" --request GET https://vault.vibrato.gradeous.io:8200/v1/aws/creds/ecr-role)
            SECRET_JSON=$(curl -H "X-Vault-Token: $TOKEN" -X GET https://vault.vibrato.gradeous.io:8200/v1/secret/demo)
