@@ -52,11 +52,11 @@ jobs:
            CRED_JSON=$(curl --header "X-Vault-Token: $TOKEN" --request GET https://vault.vibrato.gradeous.io:8200/v1/aws/creds/ecr-role)
            SECRET_JSON=$(curl -H "X-Vault-Token: $TOKEN" -X GET https://vault.vibrato.gradeous.io:8200/v1/secret/demo)
 
-           export AWS_ACCESS_KEY_ID=$(jq -r .data.access_key <<< $CRED_JSON)
-           export AWS_SECRET_ACCESS_KEY=$(jq -r .data.secret_key <<< $CRED_JSON)
+           export AWS_ACCESS_KEY_ID=$(jq -r .data.access_key \<<< $CRED_JSON)
+           export AWS_SECRET_ACCESS_KEY=$(jq -r .data.secret_key \<<< $CRED_JSON)
            export AWS_DEFAULT_REGION=ap-southeast-2
 
-           export API_SECRET=$(jq -r .data.API_KEY <<< $SECRET_JSON)
+           export API_SECRET=$(jq -r .data.API_KEY \<<< $SECRET_JSON)
 
            sh build_docker.sh
            sh push_to_ecr.sh
