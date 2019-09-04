@@ -1,0 +1,68 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2.1
+
+executors:
+  base:
+    docker:
+      - image: circleci/node:latest
+    working_directory: /home/circleci
+
+jobs:
+  build:
+    executor: base
+    steps:
+      - attach_workspace:
+          at: /home/circleci
+      - checkout:
+          path: /home/circleci/app
+      # Download and cache dependencies
+      - run:
+          name: npm install
+          command: |
+             cd app
+             npm install
+             ls
+
+      - persist_to_workspace:
+          # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is
+          # taken to be the root directory of the workspace.
+          root: /home/circleci
+          paths: app
+          # Must be relative path from root
+
+  deployECR:
+    executor: base
+    steps:
+      - setup_remote_docker:   # (2)
+          docker_layer_caching: true # (3)
+      - attach_workspace:
+          at: /home/circleci
+      - deploy:
+         name: Build and push docker image to AWS ECR
+         command: |
+           cd /home/circleci/app
+           ls
+           curl -O https://bootstrap.pypa.io/get-pip.py
+           sudo python get-pip.py
+           sudo apt-get update; sudo apt-get install python-dev -y
+           sudo pip install awscli
+           export AWS_ACCESS_KEY_ID=$(curl --header "X-Vault-Token: $TOKEN" --request GET https://vault.vibrato.gradeous.io:8200/v1/aws/creds/ecr-role | jq -r .data.access_key)
+           export AWS_SECRET_ACCESS_KEY=$(curl --header "X-Vault-Token: $TOKEN" --request GET https://vault.vibrato.gradeous.io:8200/v1/aws/creds/ecr-role | jq -r .data.secret_key)
+           export AWS_DEFAULT_REGION=us-west-1
+           export API_SECRET="12345"
+           echo $AWS_ACCESS_KEY_ID
+           echo $AWS_SECRET_ACCESS_KEY
+           sh build_docker.sh
+           sh push_to_ecr.sh
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
+      - deployECR:
+          requires:
+            - build
