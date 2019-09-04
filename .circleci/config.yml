@@ -20,17 +20,15 @@ jobs:
           path: /home/circleci/app
       # Download and cache dependencies
       - run:
-          name: npm install
+          name: install aws cli and run npm install
           command: |
              cd app
              npm install
-
-          name: install awscli
-          command: |
-            curl -O https://bootstrap.pypa.io/get-pip.py
+             curl -O https://bootstrap.pypa.io/get-pip.py
              sudo python get-pip.py
              sudo apt-get update; sudo apt-get install python-dev -y
              sudo pip install awscli
+
 
       - persist_to_workspace:
           # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is
