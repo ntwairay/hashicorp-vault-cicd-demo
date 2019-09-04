@@ -7,6 +7,8 @@ WORKDIR /web
 # Environment variable
 ARG API_SECRET
 
+ENV API_SECRET=$API_SECRET
+
 # Install app dependencies
 RUN npm install
 
