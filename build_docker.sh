@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo $API_SECRET
+
 echo "Creating local docker image ......."
 docker build --build-arg API_SECRET=$API_SECRET \
              -t hashicorp-demo:latest . -q
