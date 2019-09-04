@@ -1,5 +1,5 @@
 echo "Get Secret ......."
-API_SECRET=$(jq -r .data.API_KEY <<< $SECRET_JSON)
+export API_SECRET=$(jq -r .data.API_KEY <<< $SECRET_JSON)
 
 echo "Creating local docker image ......."
 docker build --build-arg API_SECRET=$API_SECRET \
