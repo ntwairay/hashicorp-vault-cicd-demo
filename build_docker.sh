@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "Get Secret ......."
 export API_SECRET=$(jq -r .data.API_KEY <<< $SECRET_JSON)
 

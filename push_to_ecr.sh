@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "Set AWS Credential ......."
 export AWS_ACCESS_KEY_ID=$(jq -r .data.access_key <<< $CRED_JSON)
 export AWS_SECRET_ACCESS_KEY=$(jq -r .data.secret_key <<< $CRED_JSON)
