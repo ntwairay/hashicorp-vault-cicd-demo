@@ -58,8 +58,7 @@ jobs:
 
            export API_SECRET=$(jq -r .data.API_KEY \<<< $SECRET_JSON)
 
-           sh build_docker.sh
-           sh push_to_ecr.sh
+           sh deploy.sh
 
 workflows:
   version: 2
