@@ -5,7 +5,7 @@
   "description": "Node.js Hello World app using docker",
   "author": "ray.ng@vibrato.com.au",
   "dependencies": {
-    "express": "4.16.1"
+    "express": "4.19.2"
   },
   "scripts": {
     "start": "node ./index.js"
